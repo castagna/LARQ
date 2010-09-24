@@ -6,13 +6,10 @@
 
 package org.openjena.larq;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.apache.lucene.index.CorruptIndexException;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -26,8 +23,6 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
-import org.openjena.larq.IndexBuilderNode;
 
 public class TestLARQ_Code extends TestCase
 {
