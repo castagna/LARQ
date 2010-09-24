@@ -6,10 +6,14 @@
 
 package larq.cmdline;
 
+import java.io.File;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.openjena.larq.ARQLuceneException;
 import org.openjena.larq.IndexLARQ;
 
@@ -22,7 +26,7 @@ import arq.cmdline.CmdGeneral;
 public class ModLARQindex implements ArgModuleGeneral
 {
     ArgDecl argIndex = new ArgDecl(ArgDecl.HasValue, "larq", "lucene", "index")  ;
-    String luceneDir ;
+    File luceneDir ;
     
 
     public void registerWith(CmdGeneral cmdLine)
@@ -35,14 +39,14 @@ public class ModLARQindex implements ArgModuleGeneral
     {
         if ( ! cmdLine.contains(argIndex) )
             throw new CmdException("No index") ;
-        luceneDir = cmdLine.getValue(argIndex) ; 
+        luceneDir = new File(cmdLine.getValue(argIndex)) ; 
     }
     
     public IndexLARQ getIndexLARQ()
     { 
         try {
-            FSDirectory dir = FSDirectory.getDirectory(luceneDir);
-            IndexReader indexReader = IndexReader.open(dir) ;
+            FSDirectory dir = FSDirectory.open(luceneDir);
+            IndexReader indexReader = IndexReader.open(dir, true) ;
             return new IndexLARQ(indexReader) ;
         } catch (Exception ex)
         { throw new ARQLuceneException("LARQ", ex) ; }
@@ -51,8 +55,8 @@ public class ModLARQindex implements ArgModuleGeneral
     public IndexWriter getIndexWriter()
     {
         try {
-            FSDirectory dir = FSDirectory.getDirectory(luceneDir);
-            IndexWriter indexWriter = new IndexWriter(dir, new StandardAnalyzer()) ;
+            FSDirectory dir = FSDirectory.open(luceneDir);
+            IndexWriter indexWriter = new IndexWriter(dir, new StandardAnalyzer(Version.LUCENE_29), MaxFieldLength.UNLIMITED) ;
             return indexWriter ;
         } catch (Exception ex)
         { throw new ARQLuceneException("LARQ", ex) ; }

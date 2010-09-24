@@ -17,6 +17,7 @@ import org.apache.lucene.search.Hits ;
 import org.apache.lucene.search.IndexSearcher ;
 import org.apache.lucene.search.Query ;
 import org.apache.lucene.search.Searcher ;
+import org.apache.lucene.util.Version;
 import org.openjena.atlas.iterator.IteratorTruncate ;
 
 import com.hp.hpl.jena.graph.Node ;
@@ -40,7 +41,7 @@ public class IndexLARQ
 
     public IndexLARQ(IndexReader r)
     { 
-        this(r, new StandardAnalyzer()) ;
+        this(r, new StandardAnalyzer(Version.LUCENE_29)) ;
     }
         
     public IndexLARQ(IndexReader r, Analyzer a)

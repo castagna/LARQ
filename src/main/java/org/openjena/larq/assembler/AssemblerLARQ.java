@@ -6,7 +6,11 @@
 
 package org.openjena.larq.assembler;
 
+import java.io.File;
+
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.openjena.larq.IndexLARQ;
 
 import com.hp.hpl.jena.assembler.Assembler;
@@ -32,7 +36,8 @@ public class AssemblerLARQ extends AssemblerBase implements Assembler
                 throw new AssemblerException(root, "Required: exactly one index property" ) ;
 
             String index = GraphUtils.getAsStringValue(root, LARQAssemblerVocab.pIndex) ;
-            IndexReader indexReader = IndexReader.open(index) ;
+            Directory dir = FSDirectory.open(new File(index));
+            IndexReader indexReader = IndexReader.open(dir, true) ;
             IndexLARQ indexLARQ = new IndexLARQ(indexReader) ;
             return indexLARQ ;
 

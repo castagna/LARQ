@@ -42,6 +42,7 @@ public class TestLARQ_Script extends TestCase
         model.register(builder) ;    
         FileManager.get().readModel(model, root+dataFile) ;
         model.unregister(builder) ;
+        builder.closeWriter();
         
         IndexLARQ index = builder.getIndex() ;
         LARQ.setDefaultIndex(index) ;

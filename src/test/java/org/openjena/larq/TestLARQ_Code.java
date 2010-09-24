@@ -122,6 +122,8 @@ public class TestLARQ_Code extends TestCase
         
         StringReader sr = new StringReader("R1") ;
         b.index(r1, sr) ;
+        b.closeWriter();
+        
         IndexLARQ index = b.getIndex() ;
         NodeIterator nIter = index.searchModelByIndex("R1") ;
         assertEquals(1, TestLARQUtils.count(nIter)) ;
@@ -129,7 +131,10 @@ public class TestLARQ_Code extends TestCase
         assertEquals(0, TestLARQUtils.count(nIter)) ;
         
         // Add r2.
+        b = new IndexBuilderNode() ;
         b.index(r2, new StringReader("R2")) ;
+        b.closeWriter();
+
         // Old index - can't see R2
         nIter = index.searchModelByIndex("R2") ;
         assertEquals(0, TestLARQUtils.count(nIter)) ;

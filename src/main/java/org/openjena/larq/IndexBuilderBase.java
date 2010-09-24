@@ -12,9 +12,11 @@ import java.io.IOException ;
 import org.apache.lucene.analysis.standard.StandardAnalyzer ;
 import org.apache.lucene.index.IndexReader ;
 import org.apache.lucene.index.IndexWriter ;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory ;
 import org.apache.lucene.store.FSDirectory ;
 import org.apache.lucene.store.RAMDirectory ;
+import org.apache.lucene.util.Version;
 
 /** Root class for index creation.
  *  
@@ -54,7 +56,7 @@ public class IndexBuilderBase implements IndexBuilder
     public IndexBuilderBase(File fileDir)
     {
         try {
-            dir = FSDirectory.getDirectory(fileDir);
+            dir = FSDirectory.open(fileDir);
             makeIndex() ;
         } catch (Exception ex)
         { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
@@ -66,7 +68,7 @@ public class IndexBuilderBase implements IndexBuilder
     public IndexBuilderBase(String fileDir)
     {
         try {
-            dir = FSDirectory.getDirectory(fileDir);
+            dir = FSDirectory.open(new File(fileDir));
             makeIndex() ;
         } catch (Exception ex)
         { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
@@ -75,7 +77,7 @@ public class IndexBuilderBase implements IndexBuilder
     private void makeIndex()
     {
         try {
-            indexWriter = new IndexWriter(dir, new StandardAnalyzer()) ;
+            indexWriter = new IndexWriter(dir, new StandardAnalyzer(Version.LUCENE_29), MaxFieldLength.UNLIMITED) ;
         } catch (Exception ex)
         { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
     }
@@ -87,7 +89,7 @@ public class IndexBuilderBase implements IndexBuilder
         // Always return a new reader.  Write may have changed.
         try {
             flushWriter() ;
-            return IndexReader.open(dir) ;
+            return IndexReader.open(dir, true) ;
         } catch (Exception e) { throw new ARQLuceneException("getIndexReader", e) ; }
     }
     
