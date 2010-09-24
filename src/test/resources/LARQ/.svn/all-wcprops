@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/jena/!svn/ver/7798/ARQ/trunk/testing/LARQ
+END
+data.ttl
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/jena/!svn/ver/619/ARQ/trunk/testing/LARQ/data.ttl
+END
+larq-q-7.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-7.rq
+END
+larq-q-6.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-6.rq
+END
+data-1.ttl
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/jena/!svn/ver/619/ARQ/trunk/testing/LARQ/data-1.ttl
+END
+larq-q-5.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-5.rq
+END
+data-2.ttl
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/jena/!svn/ver/619/ARQ/trunk/testing/LARQ/data-2.ttl
+END
+larq-q-4.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-4.rq
+END
+larq-q-3.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-3.rq
+END
+larq-q-2.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-2.rq
+END
+larq-q-1.rq
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/larq-q-1.rq
+END
+results-1.srj
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/jena/!svn/ver/619/ARQ/trunk/testing/LARQ/results-1.srj
+END
+results-2.srj
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/jena/!svn/ver/7798/ARQ/trunk/testing/LARQ/results-2.srj
+END
+results-3.srj
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/jena/!svn/ver/619/ARQ/trunk/testing/LARQ/results-3.srj
+END
+results-4.srj
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/results-4.srj
+END
+results-5.srj
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/results-5.srj
+END
+results-6.srj
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/results-6.srj
+END
+results-7.srj
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/jena/!svn/ver/1094/ARQ/trunk/testing/LARQ/results-7.srj
+END
