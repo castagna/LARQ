@@ -11,3 +11,11 @@ This is an *experimental* (and unsupported) separate module from ARQ.
 See also:
 
  - http://openjena.org/ARQ/lucene-arq.html
+
+ 
+TODO
+====
+
+ - Upgrade Lucene to 3.x (i.e. all deprecated methods have been removed)
+ - Add a new index builder and property function for Solr (via SolrJ)
+ 

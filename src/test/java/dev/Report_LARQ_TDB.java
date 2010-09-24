@@ -18,10 +18,6 @@ import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-/**
- * Hello world!
- *
- */
 public class Report_LARQ_TDB {
 
     public static void main(String[] args) {
@@ -33,11 +29,12 @@ public class Report_LARQ_TDB {
         index(m);
         Query q = QueryFactory.create(
                 "PREFIX larq:     <http://openjena.org/LARQ/property#>" +
+                "PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>" +
                 "" +
                 "select * where {" +
-                //"?doc ?p ?lit ." +
-                //"(?lit ?score ) larq:search '+text' ." +
-                "?x  larq:versionARQ ?y ."+
+                "?doc ?p ?lit ." +
+                "(?lit ?score ) larq:search '+text' ." +
+//                "?x  pf:versionARQ ?y ."+
                 "{} UNION { ?doc ?p ?lit .}" +
                 "}"
                 );
@@ -57,6 +54,7 @@ public class Report_LARQ_TDB {
         //IndexBuilderModel larqBuilder = new IndexBuilderSubject();
         StmtIterator iter = m.listStatements();
         larqBuilder.indexStatements(iter);
+        larqBuilder.closeWriter();
 
         LARQ.setDefaultIndex(larqBuilder.getIndex());
     }
