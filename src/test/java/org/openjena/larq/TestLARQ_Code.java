@@ -6,49 +6,37 @@
 
 package org.openjena.larq;
 
-import java.io.StringReader ;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Iterator;
 
-import junit.framework.JUnit4TestAdapter ;
-import junit.framework.TestCase ;
-import org.junit.Test ;
+import junit.framework.TestCase;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.query.QueryExecution ;
-import com.hp.hpl.jena.query.ResultSet ;
-import com.hp.hpl.jena.query.larq.IndexBuilderNode ;
-import com.hp.hpl.jena.query.larq.IndexBuilderString ;
-import com.hp.hpl.jena.query.larq.IndexBuilderSubject ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.query.larq.LARQ ;
-import com.hp.hpl.jena.rdf.model.Literal ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.rdf.model.NodeIterator ;
-import com.hp.hpl.jena.rdf.model.RDFNode ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.sparql.junit.TestLARQUtils ;
-import com.hp.hpl.jena.vocabulary.DC ;
-import com.hp.hpl.jena.vocabulary.RDFS ;
+import org.apache.lucene.index.CorruptIndexException;
+import org.junit.Test;
+
+import com.hp.hpl.jena.query.ARQ;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.DC;
+import com.hp.hpl.jena.vocabulary.RDFS;
+
+import org.openjena.larq.IndexBuilderNode;
 
 public class TestLARQ_Code extends TestCase
 {
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter(TestLARQ_Code.class) ;
-    }
-    
-    
-//    public static TestSuite suite()
-//    {
-//        TestSuite ts = new TestSuite(TestLARQ1.class) ;
-//        ts.setName("LARQ-code") ;
-//        return ts ;
-//    }
-//    // Called every test.
-//    public void setUp() {}
-//    public void tearDown() {}
 
-    static final String datafile = "LARQ/data-1.ttl" ;
+    // Called every test.
+    public void setUp() {}
+    public void tearDown() {}
+
+    static final String datafile = "src/test/resources/LARQ/data-1.ttl" ;
     
     public void test_ext_1()
     {
@@ -283,17 +271,15 @@ public class TestLARQ_Code extends TestCase
         assertFalse(index.hasMatch("+iceberg")) ;
     }
     
-    @Test public void test_textMatches_index_registration_1()
+    @Test public void test_search_index_registration_1()
     {
         Model model = ModelFactory.createDefaultModel() ;
         IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
-        
         assertFalse(ARQ.getContext().isDefined(LARQ.indexKey)) ;
         try {
             LARQ.setDefaultIndex(index) ;
             assertTrue(ARQ.getContext().isDefined(LARQ.indexKey)) ;
-            
-            QueryExecution qExec = TestLARQUtils.query(model, "{ ?lit pf:textMatch '+document' }") ;
+            QueryExecution qExec = TestLARQUtils.query(model, "{ ?lit larq:search '+document' }") ;
             ResultSet rs = qExec.execSelect() ;
             assertEquals(3, TestLARQUtils.count(rs)) ;
             qExec.close() ;
@@ -303,13 +289,13 @@ public class TestLARQ_Code extends TestCase
         } finally { LARQ.removeDefaultIndex() ; }
     }
     
-    @Test public void test_textMatches_index_registration_2()
+    @Test public void test_search_index_registration_2()
     {
         Model model = ModelFactory.createDefaultModel() ;
         IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
         
         assertFalse(ARQ.getContext().isDefined(LARQ.indexKey)) ;
-        QueryExecution qExec = TestLARQUtils.query(model, "{ ?lit pf:textMatch '+document' }") ;
+        QueryExecution qExec = TestLARQUtils.query(model, "{ ?lit larq:search '+document' }") ;
         
         try {
             LARQ.setDefaultIndex(qExec.getContext(), index) ;
@@ -327,12 +313,12 @@ public class TestLARQ_Code extends TestCase
     }
     
 //    
-//    @Test public void test_textMatches_literal_1()
+//    @Test public void test_search_literal_1()
 //    {
 //        Model model = ModelFactory.createDefaultModel() ;
 //        IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
 //        LARQ.setDefaultIndex(index) ;
-//        QueryExecution qExec = query(model, "{ ?lit pf:textMatch '+document' }") ;
+//        QueryExecution qExec = query(model, "{ ?lit larq:search '+document' }") ;
 //        ResultSet rs = qExec.execSelect() ;
 //        assertEquals(3, TestLARQUtils.count(rs)) ;
 //        qExec.close() ;
@@ -340,12 +326,12 @@ public class TestLARQ_Code extends TestCase
 //        LARQ.removeDefaultIndex() ;
 //    }
 //
-//    @Test public void test_textMatches_literal_2()
+//    @Test public void test_search_literal_2()
 //    {
 //        Model model = ModelFactory.createDefaultModel() ;
 //        IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString(DC.title)) ;
 //        LARQ.setDefaultIndex(index) ;
-//        QueryExecution qExec = query(model, "{ ?lit pf:textMatch '+document' }") ;
+//        QueryExecution qExec = query(model, "{ ?lit larq:search '+document' }") ;
 //        ResultSet rs = qExec.execSelect() ;
 //        assertEquals(2, TestLARQUtils.count(rs)) ;
 //        qExec.close() ;
@@ -355,13 +341,13 @@ public class TestLARQ_Code extends TestCase
 //    
 //    
 //
-//    @Test public void test_textMatches_literal_3()
+//    @Test public void test_search_literal_3()
 //    {
 //        Model model = ModelFactory.createDefaultModel() ;
 //        IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
 //        LARQ.setDefaultIndex(index) ;
 //        QueryExecution qExec = query(model, 
-//            "{ ?lit pf:textMatch '+document' }") ;
+//            "{ ?lit larq:search '+document' }") ;
 //        ResultSetRewindable rs1 = ResultSetFactory.makeRewindable(qExec.execSelect()) ;
 //        //ResultSetFormatter.outputAsJSON(rs1) ;
 //        ResultSetRewindable rs2 = ResultSetFactory.makeRewindable(ResultSetFactory.load(results1)) ;
@@ -371,13 +357,13 @@ public class TestLARQ_Code extends TestCase
 //        LARQ.removeDefaultIndex() ;
 //    }
 //
-//    @Test public void test_textMatches_literal_4()
+//    @Test public void test_search_literal_4()
 //    {
 //        Model model = ModelFactory.createDefaultModel() ;
 //        IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
 //        LARQ.setDefaultIndex(index) ;
 //        QueryExecution qExec = query(model, 
-//            "{ ?lit pf:textMatch '+document' . ?lit pf:textMatch '+document'}") ;
+//            "{ ?lit larq:search '+document' . ?lit larq:search '+document'}") ;
 //        ResultSetRewindable rs1 = ResultSetFactory.makeRewindable(qExec.execSelect()) ;
 //        ResultSetRewindable rs2 = ResultSetFactory.makeRewindable(ResultSetFactory.load(results1)) ;
 //        assertTrue(RSCompare.same(rs1, rs2)) ;
@@ -386,13 +372,13 @@ public class TestLARQ_Code extends TestCase
 //        LARQ.removeDefaultIndex() ;
 //    }
 //
-//    @Test public void test_textMatches_literal_5()
+//    @Test public void test_search_literal_5()
 //    {
 //        Model model = ModelFactory.createDefaultModel() ;
 //        IndexLARQ index = TestLARQUtils.createIndex(model, datafile, new IndexBuilderString()) ;
 //        LARQ.setDefaultIndex(index) ;
 //        QueryExecution qExec = query(model, 
-//        "{ ?lit pf:textMatch '+document' . ?doc ?p ?lit }") ;
+//        "{ ?lit larq:search '+document' . ?doc ?p ?lit }") ;
 //        ResultSetRewindable rs1 = ResultSetFactory.makeRewindable(qExec.execSelect()) ;
 //        //ResultSetFormatter.outputAsJSON(rs1) ;
 //        ResultSetRewindable rs2 = ResultSetFactory.makeRewindable(ResultSetFactory.load(results2)) ;

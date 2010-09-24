@@ -7,16 +7,16 @@
 package org.openjena.larq.examples;
 
 
-import org.openjena.atlas.lib.StrUtils ;
+import org.openjena.atlas.lib.StrUtils;
+import org.openjena.larq.IndexBuilderSubject;
+import org.openjena.larq.IndexLARQ;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.query.larq.IndexBuilderSubject ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.sparql.util.Utils ;
-import com.hp.hpl.jena.util.FileManager ;
-import com.hp.hpl.jena.vocabulary.DC ;
+import com.hp.hpl.jena.query.ARQ;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.sparql.util.Utils;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.DC;
 
 /** Example code to load a model from a file, index subjects by DC title property, 
  * then execute a SPARQL query with a Lucene search in it.
@@ -34,7 +34,7 @@ public class ExLucene4
         System.out.println() ;
         
         Model model = ModelFactory.createDefaultModel() ;
-        IndexLARQ index = buildSubjectTitleIndex(model,  "LARQ/data-1.ttl") ;
+        IndexLARQ index = buildSubjectTitleIndex(model,  "src/test/resources/LARQ/data-1.ttl") ;
         
         // Search for string 
         String searchString = "+document" ;
@@ -43,10 +43,10 @@ public class ExLucene4
         String queryString = StrUtils.strjoin("\n", 
             "PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>" ,
             "PREFIX :       <http://example/>" ,
-            "PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>",
+            "PREFIX larq:     <http://openjena.org/LARQ/property#>",
             "PREFIX  dc:    <http://purl.org/dc/elements/1.1/>",
             "SELECT ?doc {" ,
-            "    ?doc pf:textMatch '"+searchString+"'.",
+            "    ?doc larq:search '"+searchString+"'.",
             "}") ;
         
         // Two of three docuemnts should match. 

@@ -10,6 +10,7 @@ import java.io.Reader ;
 
 import org.apache.lucene.document.Document ;
 import org.apache.lucene.document.Field ;
+import org.openjena.larq.pfunction.search;
 
 import com.hp.hpl.jena.datatypes.RDFDatatype ;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype ;
@@ -21,13 +22,20 @@ import com.hp.hpl.jena.query.ARQ ;
 import com.hp.hpl.jena.rdf.model.AnonId ;
 import com.hp.hpl.jena.rdf.model.Literal ;
 import com.hp.hpl.jena.sparql.ARQConstants ;
+import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionRegistry;
 import com.hp.hpl.jena.sparql.util.Context ;
 import com.hp.hpl.jena.sparql.util.NodeFactory ;
 import com.hp.hpl.jena.sparql.util.Symbol ;
 
 public class LARQ
 {
- 
+    /** The ARQ property function library URI space */
+    public static final String LARQPropertyFunctionLibraryURI = "http://openjena.org/LARQ/property#" ;
+    
+    static {
+    	PropertyFunctionRegistry.get().put(LARQPropertyFunctionLibraryURI + "search", search.class);
+    }
+
     // The field that is the index
     public static final String fIndex               = "index" ;
     

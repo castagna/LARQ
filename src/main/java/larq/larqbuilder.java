@@ -6,19 +6,20 @@
 
 package larq;
 
-import java.util.Iterator ;
+import java.util.Iterator;
 
-import arq.cmdline.ArgDecl ;
-import arq.cmdline.CmdLARQ ;
-import arq.cmdline.ModDatasetAssembler ;
-import arq.cmdline.ModLARQindex ;
+import org.openjena.larq.IndexBuilderModel;
+import org.openjena.larq.IndexBuilderString;
+import org.openjena.larq.IndexBuilderSubject;
 
-import com.hp.hpl.jena.query.Dataset ;
-import com.hp.hpl.jena.query.larq.IndexBuilderModel ;
-import com.hp.hpl.jena.query.larq.IndexBuilderString ;
-import com.hp.hpl.jena.query.larq.IndexBuilderSubject ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.StmtIterator ;
+import arq.cmdline.ArgDecl;
+import arq.cmdline.CmdLARQ;
+import arq.cmdline.ModDatasetAssembler;
+import arq.cmdline.ModLARQindex;
+
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 public class larqbuilder extends CmdLARQ
 {

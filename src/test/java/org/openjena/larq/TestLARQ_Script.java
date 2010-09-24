@@ -6,47 +6,27 @@
 
 package org.openjena.larq;
 
-import junit.framework.JUnit4TestAdapter ;
-import junit.framework.TestCase ;
-import org.junit.Test ;
+import junit.framework.TestCase;
 
-import com.hp.hpl.jena.query.Query ;
-import com.hp.hpl.jena.query.QueryExecution ;
-import com.hp.hpl.jena.query.QueryExecutionFactory ;
-import com.hp.hpl.jena.query.QueryFactory ;
-import com.hp.hpl.jena.query.ResultSetFactory ;
-import com.hp.hpl.jena.query.ResultSetFormatter ;
-import com.hp.hpl.jena.query.larq.IndexBuilderModel ;
-import com.hp.hpl.jena.query.larq.IndexBuilderString ;
-import com.hp.hpl.jena.query.larq.IndexBuilderSubject ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.query.larq.LARQ ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.sparql.junit.QueryTest ;
-import com.hp.hpl.jena.sparql.resultset.ResultSetRewindable ;
-import com.hp.hpl.jena.util.FileManager ;
-import com.hp.hpl.jena.vocabulary.DC ;
+import org.junit.Test;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSetFactory;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.sparql.junit.QueryTest;
+import com.hp.hpl.jena.sparql.resultset.ResultSetRewindable;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.DC;
 
 public class TestLARQ_Script extends TestCase
 {
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter(TestLARQ_Script.class) ;
-    }
     
-//    public static TestSuite suite()
-//    {
-//        TestSuite ts = new TestSuite(TestLARQ2.class) ;
-//        ts.setName("LARQ-Scripts") ;
-//        return ts ;
-//    }
-    
-    static final String root = "LARQ/" ;
-//    static final String datafile = "LARQ/data-1.ttl" ;
-//    static final String results1 = "LARQ/results-1.srj" ;
-//    static final String results2 = "LARQ/results-2.srj" ;
-//    static final String results3 = "LARQ/results-3.srj" ;
+    static final String root = "src/test/resources/LARQ/" ;
     
     public TestLARQ_Script(String name)
     { 
@@ -58,7 +38,6 @@ public class TestLARQ_Script extends TestCase
     static void runTestScript(String queryFile, String dataFile, String resultsFile, IndexBuilderModel builder)
     {
         Query query = QueryFactory.read(root+queryFile) ;
-        IndexBuilderString larqBuilder = new IndexBuilderString() ;
         Model model = ModelFactory.createDefaultModel() ; 
         model.register(builder) ;    
         FileManager.get().readModel(model, root+dataFile) ;

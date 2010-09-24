@@ -6,7 +6,6 @@
 
 package org.openjena.larq;
 
-
 import java.util.Iterator ;
 
 import org.apache.lucene.analysis.Analyzer ;

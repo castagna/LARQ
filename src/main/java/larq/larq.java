@@ -6,17 +6,15 @@
 
 package larq;
 
-import java.util.Iterator ;
+import java.util.Iterator;
 
-import arq.cmdline.CmdLARQ ;
-import arq.cmdline.ModLARQindex ;
+import larq.cmdline.CmdLARQ;
+import larq.cmdline.ModLARQindex;
 
-import com.hp.hpl.jena.query.larq.HitLARQ ;
-import com.hp.hpl.jena.query.larq.IndexBuilderString ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.StmtIterator ;
-import com.hp.hpl.jena.sparql.util.FmtUtils ;
+import org.openjena.larq.HitLARQ;
+import org.openjena.larq.IndexLARQ;
+
+import com.hp.hpl.jena.sparql.util.FmtUtils;
 
 public class larq extends CmdLARQ
 {
@@ -65,11 +63,11 @@ public class larq extends CmdLARQ
         }
     }
 
-    private void index(IndexBuilderString larqBuilder, Model model)
-    {
-        StmtIterator sIter = model.listStatements() ;
-        larqBuilder.indexStatements(sIter) ;
-    }
+//    private void index(IndexBuilderString larqBuilder, Model model)
+//    {
+//        StmtIterator sIter = model.listStatements() ;
+//        larqBuilder.indexStatements(sIter) ;
+//    }
 }
 
 /*

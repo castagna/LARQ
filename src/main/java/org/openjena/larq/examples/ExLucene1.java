@@ -7,21 +7,21 @@
 package org.openjena.larq.examples;
 
 
-import org.openjena.atlas.lib.StrUtils ;
+import org.openjena.atlas.lib.StrUtils;
+import org.openjena.larq.IndexBuilderString;
+import org.openjena.larq.IndexLARQ;
+import org.openjena.larq.LARQ;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.query.Query ;
-import com.hp.hpl.jena.query.QueryExecution ;
-import com.hp.hpl.jena.query.QueryExecutionFactory ;
-import com.hp.hpl.jena.query.QueryFactory ;
-import com.hp.hpl.jena.query.ResultSetFormatter ;
-import com.hp.hpl.jena.query.larq.IndexBuilderString ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.query.larq.LARQ ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.sparql.util.Utils ;
-import com.hp.hpl.jena.util.FileManager ;
+import com.hp.hpl.jena.query.ARQ;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.sparql.util.Utils;
+import com.hp.hpl.jena.util.FileManager;
 
 /** Example code to load a model from a file, index all string literals,
  * then execute a SPARQL query with a Lucene search in it.
@@ -39,7 +39,7 @@ public class ExLucene1
         System.out.println() ;
         
         Model model = ModelFactory.createDefaultModel() ;
-        IndexLARQ index = buildIndex(model,  "LARQ/data-1.ttl") ;
+        IndexLARQ index = buildIndex(model,  "src/test/resources/LARQ/data-1.ttl") ;
         
         // Search for 
         String searchString = "+document" ;
@@ -47,9 +47,9 @@ public class ExLucene1
         String queryString = StrUtils.strjoin("\n", 
             "PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>" ,
             "PREFIX :       <http://example/>" ,
-            "PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>",
+            "PREFIX larq:     <http://openjena.org/LARQ/property#>",
             "SELECT * {" ,
-            "    ?lit pf:textMatch '"+searchString+"'.",
+            "    ?lit larq:search '"+searchString+"'.",
             "}") ;
         
         // Two of three docuemnts should match. 

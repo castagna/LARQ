@@ -16,9 +16,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory ;
 import com.hp.hpl.jena.query.QueryFactory ;
 import com.hp.hpl.jena.query.ResultSet ;
 import com.hp.hpl.jena.query.ResultSetFormatter ;
-import com.hp.hpl.jena.query.larq.IndexBuilderModel ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.query.larq.LARQ ;
 import com.hp.hpl.jena.rdf.model.Model ;
 import com.hp.hpl.jena.rdf.model.ModelFactory ;
 import com.hp.hpl.jena.util.FileManager ;
@@ -34,7 +31,7 @@ public class TestLARQUtils
         String queryString = StrUtils.strjoin("\n", 
             "PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>" ,
             "PREFIX :       <http://example/>" ,
-            "PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>",
+            "PREFIX larq:     <http://openjena.org/LARQ/property#>",
             "PREFIX  dc:    <http://purl.org/dc/elements/1.1/>",
             "SELECT *",
             pattern ) ;

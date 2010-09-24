@@ -6,7 +6,6 @@
 
 package org.openjena.larq;
 
-
 import java.io.File ;
 
 import org.apache.lucene.index.IndexWriter ;

@@ -6,14 +6,13 @@
 
 package org.openjena.larq;
 
-import java.io.File ;
+import java.io.File;
 
-import org.apache.lucene.index.IndexWriter ;
-import org.apache.lucene.store.Directory ;
+import org.apache.lucene.index.IndexWriter;
 
-import com.hp.hpl.jena.rdf.listeners.StatementListener ;
-import com.hp.hpl.jena.rdf.model.Statement ;
-import com.hp.hpl.jena.rdf.model.StmtIterator ;
+import com.hp.hpl.jena.rdf.listeners.StatementListener;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 /** Root class for index creation from a graph or model.  This class
  *  can be used as a Model listener to index while loading data.  It also
@@ -29,9 +28,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator ;
 
 public abstract class IndexBuilderModel extends StatementListener
 {
-    private Directory dir = null ;
 
-    // Multiple inheritance would be nice .
+	// Multiple inheritance would be nice .
     protected IndexBuilderNode index ;
     
     /** Create an in-memory index */

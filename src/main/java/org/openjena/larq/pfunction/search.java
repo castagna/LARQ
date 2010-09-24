@@ -1,24 +1,37 @@
 /*
- * (c) Copyright 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP
  * All rights reserved.
  * [See end of file]
  */
 
-package org.openjena.larq;
+package org.openjena.larq.pfunction;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.openjena.larq.IndexLARQ;
+import org.openjena.larq.LARQ;
+import org.openjena.larq.LuceneSearch;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses( {
-    TestLARQ_Code.class,
-    TestLARQ_Script.class
-} )
+import com.hp.hpl.jena.sparql.engine.ExecutionContext;
 
-public class TS_LARQ {}
+/** Property function to search the default Lucene index (which is 
+ *  the one set by {@link LARQ#setDefaultIndex(IndexLARQ) })
+ */
+
+public class search extends LuceneSearch
+{
+    private IndexLARQ index = null ;
+
+    @Override
+    protected IndexLARQ getIndex(ExecutionContext execCxt)
+    { 
+        if ( index == null )
+            index = LARQ.getDefaultIndex(execCxt.getContext()) ;
+        
+        return index ; 
+    }
+}
 
 /*
- * (c) Copyright 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

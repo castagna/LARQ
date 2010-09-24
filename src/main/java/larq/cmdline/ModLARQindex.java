@@ -10,15 +10,14 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
+import org.openjena.larq.ARQLuceneException;
+import org.openjena.larq.IndexLARQ;
 
 import arq.cmd.CmdException;
 import arq.cmdline.ArgDecl;
 import arq.cmdline.ArgModuleGeneral;
 import arq.cmdline.CmdArgModule;
 import arq.cmdline.CmdGeneral;
-
-import com.hp.hpl.jena.query.larq.ARQLuceneException;
-import com.hp.hpl.jena.query.larq.IndexLARQ;
 
 public class ModLARQindex implements ArgModuleGeneral
 {

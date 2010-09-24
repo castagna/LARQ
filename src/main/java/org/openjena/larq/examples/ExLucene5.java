@@ -6,19 +6,19 @@
 
 package org.openjena.larq.examples;
 
-import java.io.StringReader ;
+import java.io.StringReader;
 
-import org.openjena.atlas.lib.StrUtils ;
+import org.openjena.atlas.lib.StrUtils;
+import org.openjena.larq.IndexBuilderNode;
+import org.openjena.larq.IndexLARQ;
 
-import com.hp.hpl.jena.query.ARQ ;
-import com.hp.hpl.jena.query.larq.IndexBuilderNode ;
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.rdf.model.Literal ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.ModelFactory ;
-import com.hp.hpl.jena.rdf.model.Resource ;
-import com.hp.hpl.jena.rdf.model.ResourceFactory ;
-import com.hp.hpl.jena.sparql.util.Utils ;
+import com.hp.hpl.jena.query.ARQ;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.sparql.util.Utils;
 
 /** Example code to index subjects by some external content.
  *  Pattern 3. 
@@ -44,9 +44,9 @@ public class ExLucene5
         
         // This time, find documents with a matching DC title. 
         String queryString = StrUtils.strjoin("\n", 
-            "PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>",
+            "PREFIX larq:     <http://openjena.org/LARQ/property#>",
             "SELECT ?doc {" ,
-            "    ?doc pf:textMatch '"+searchString+"'.",
+            "    ?doc larq:search '"+searchString+"'.",
             "}") ;
         
         // Two of three docuemnts should match. 

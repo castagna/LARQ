@@ -1,24 +1,28 @@
 /*
- * (c) Copyright 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2008, 2009 Hewlett-Packard Development Company, LP
  * All rights reserved.
  * [See end of file]
  */
 
-package org.openjena.larq;
+package org.openjena.larq.assembler;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import com.hp.hpl.jena.assembler.JA ;
+import com.hp.hpl.jena.rdf.model.Property ;
+import com.hp.hpl.jena.rdf.model.Resource ;
+import com.hp.hpl.jena.rdf.model.ResourceFactory ;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses( {
-    TestLARQ_Code.class,
-    TestLARQ_Script.class
-} )
+public class LARQAssemblerVocab
+{
+    public static final String NS = JA.getURI() ;
+    public static String getURI() { return NS ; }
+    
+    public static final Resource tTextIndex         = ResourceFactory.createResource(NS+"TextIndex") ;
 
-public class TS_LARQ {}
+    public static final Property pIndex             = ResourceFactory.createProperty(NS, "index") ;
+}
 
 /*
- * (c) Copyright 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2008, 2009 Hewlett-Packard Development Company, LP
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

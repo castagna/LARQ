@@ -1,35 +1,52 @@
 /*
- * (c) Copyright 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2010 Talis Information Ltd
  * All rights reserved.
  * [See end of file]
  */
 
-package org.openjena.larq.pfunction;
+package org.openjena.larq.assembler;
 
-import com.hp.hpl.jena.query.larq.IndexLARQ ;
-import com.hp.hpl.jena.query.larq.LARQ ;
-import com.hp.hpl.jena.query.larq.LuceneSearch ;
-import com.hp.hpl.jena.sparql.engine.ExecutionContext ;
+import org.apache.lucene.index.IndexReader;
+import org.openjena.larq.IndexLARQ;
 
-/** Property function to search the default Lucene index (which is 
- *  the one set by {@link LARQ#setDefaultIndex(IndexLARQ) })
- */
+import com.hp.hpl.jena.assembler.Assembler;
+import com.hp.hpl.jena.assembler.Mode;
+import com.hp.hpl.jena.assembler.assemblers.AssemblerBase;
+import com.hp.hpl.jena.assembler.exceptions.AssemblerException;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.ARQException;
+import com.hp.hpl.jena.sparql.util.graph.GraphUtils;
 
-public class textMatch extends LuceneSearch
+public class AssemblerLARQ extends AssemblerBase implements Assembler
 {
-    private IndexLARQ index = null ;
-
+    /** Vocabulary
+     *     ja:luceneIndex ....
+     */
+    
     @Override
-    protected IndexLARQ getIndex(ExecutionContext execCxt)
-    { 
-        if ( index == null )
-            index = LARQ.getDefaultIndex(execCxt.getContext()) ;
-        return index ; 
+    public Object open(Assembler a, Resource root, Mode mode)
+    {
+        try
+        {
+            if ( ! GraphUtils.exactlyOneProperty(root, LARQAssemblerVocab.pIndex) )
+                throw new AssemblerException(root, "Required: exactly one index property" ) ;
+
+            String index = GraphUtils.getAsStringValue(root, LARQAssemblerVocab.pIndex) ;
+            IndexReader indexReader = IndexReader.open(index) ;
+            IndexLARQ indexLARQ = new IndexLARQ(indexReader) ;
+            return indexLARQ ;
+
+        } catch (Exception ex)
+        {
+            throw new ARQException("Failed to assemble Lucene index", ex) ;
+        }
     }
 }
 
+
+
 /*
- * (c) Copyright 2006, 2007, 2008, 2009 Hewlett-Packard Development Company, LP
+ * (c) Copyright 2010 Talis Information Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

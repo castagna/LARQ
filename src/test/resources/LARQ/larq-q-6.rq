@@ -1,9 +1,9 @@
 PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
 PREFIX :       <http://example/>
-PREFIX pf:     <http://jena.hpl.hp.com/ARQ/property#>
+PREFIX larq:     <http://openjena.org/LARQ/property#>
 PREFIX dc:    <http://purl.org/dc/elements/1.1/>
 
 SELECT *
 {
-    (?lit ?score) pf:textMatch ('+document' 0.7)
+    (?lit ?score) larq:search ('+document' 0.7)
 }
