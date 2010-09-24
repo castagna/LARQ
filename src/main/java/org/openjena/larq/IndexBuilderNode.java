@@ -50,7 +50,7 @@ public class IndexBuilderNode extends IndexBuilderBase
             LARQ.index(doc, indexStr) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
-        { throw new ARQLuceneException("index", ex) ; }
+        { throw new LARQException("index", ex) ; }
     }
    
     public void index(RDFNode rdfNode, Reader indexStream)
@@ -61,7 +61,7 @@ public class IndexBuilderNode extends IndexBuilderBase
             LARQ.index(doc, indexStream) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
-        { throw new ARQLuceneException("index", ex) ; }
+        { throw new LARQException("index", ex) ; }
     }
     
     public void index(Node node, String indexStr)
@@ -72,7 +72,7 @@ public class IndexBuilderNode extends IndexBuilderBase
             LARQ.index(doc, indexStr) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
-        { throw new ARQLuceneException("index", ex) ; }
+        { throw new LARQException("index", ex) ; }
     }
    
     public void index(Node node, Reader indexStream)
@@ -83,7 +83,7 @@ public class IndexBuilderNode extends IndexBuilderBase
             LARQ.index(doc, indexStream) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
-        { throw new ARQLuceneException("index", ex) ; }
+        { throw new LARQException("index", ex) ; }
     }
 }
 

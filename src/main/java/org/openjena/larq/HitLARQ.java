@@ -24,7 +24,7 @@ public class HitLARQ
             docId = hit.getId() ;
         }
         catch (Exception e)
-        { throw new ARQLuceneException("node conversion error", e) ; }
+        { throw new LARQException("node conversion error", e) ; }
     }
 
     public Node getNode()

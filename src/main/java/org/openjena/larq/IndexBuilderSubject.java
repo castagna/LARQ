@@ -87,7 +87,7 @@ public class IndexBuilderSubject extends IndexBuilderModel
             // there will be two hits later.
             index.index(subject, object.getLiteralLexicalForm()) ;
         } catch (Exception e)
-        { throw new ARQLuceneException("indexStatement", e) ; }
+        { throw new LARQException("indexStatement", e) ; }
     }
 
     protected boolean indexThisStatement(Statement s)

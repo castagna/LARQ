@@ -6,28 +6,28 @@
 
 package org.openjena.larq;
 
-import java.util.Iterator ;
+import java.util.Iterator;
 
-import org.apache.lucene.analysis.Analyzer ;
-import org.apache.lucene.analysis.standard.StandardAnalyzer ;
-import org.apache.lucene.index.IndexReader ;
-import org.apache.lucene.queryParser.QueryParser ;
-import org.apache.lucene.search.Hit ;
-import org.apache.lucene.search.Hits ;
-import org.apache.lucene.search.IndexSearcher ;
-import org.apache.lucene.search.Query ;
-import org.apache.lucene.search.Searcher ;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Hit;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Searcher;
 import org.apache.lucene.util.Version;
-import org.openjena.atlas.iterator.IteratorTruncate ;
+import org.openjena.atlas.iterator.IteratorTruncate;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.rdf.model.Model ;
-import com.hp.hpl.jena.rdf.model.NodeIterator ;
-import com.hp.hpl.jena.rdf.model.RDFNode ;
-import com.hp.hpl.jena.rdf.model.impl.NodeIteratorImpl ;
-import com.hp.hpl.jena.sparql.util.ModelUtils ;
-import com.hp.hpl.jena.util.iterator.Map1 ;
-import com.hp.hpl.jena.util.iterator.Map1Iterator ;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.impl.NodeIteratorImpl;
+import com.hp.hpl.jena.sparql.util.ModelUtils;
+import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.util.iterator.Map1Iterator;
 
 
 /** ARQ wrapper for a Lucene index.
@@ -134,7 +134,7 @@ public class IndexLARQ
             return iter ;
             
         } catch (Exception e)
-        { throw new ARQLuceneException("search", e) ; }
+        { throw new LARQException("search", e) ; }
     }
     
     /** Check whether an index recognizes a node.   
@@ -154,7 +154,7 @@ public class IndexLARQ
             }
             return null ;
         } catch (Exception e)
-        { throw new ARQLuceneException("contains", e) ; }
+        { throw new LARQException("contains", e) ; }
     }
     
     public void close()
@@ -163,7 +163,7 @@ public class IndexLARQ
             if ( reader != null )
                 reader.close() ;
         } catch (Exception e)
-        { throw new ARQLuceneException("close", e) ; }
+        { throw new LARQException("close", e) ; }
     }
 
     /** Return the Lucene IndexReader for this LARQ index */ 

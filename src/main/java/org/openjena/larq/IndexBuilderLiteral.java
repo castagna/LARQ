@@ -70,7 +70,7 @@ public abstract class IndexBuilderLiteral extends IndexBuilderModel
                 }
             }
         } catch (Exception e)
-        { throw new ARQLuceneException("indexStatement", e) ; }
+        { throw new LARQException("indexStatement", e) ; }
     }
    
     /** Close the index - no more updates possible */

@@ -72,7 +72,7 @@ public class LARQ
     public static void index(Document doc, Node indexNode)
     {
         if ( ! indexNode.isLiteral() )
-            throw new ARQLuceneException("Not a literal: "+indexNode) ;
+            throw new LARQException("Not a literal: "+indexNode) ;
         index(doc, indexNode.getLiteralLexicalForm()) ;
     }        
      
@@ -99,7 +99,7 @@ public class LARQ
         else if ( node.isBlank() )
             storeBNode(doc, (Node_Blank)node) ;
         else
-            throw new ARQLuceneException("Can't store: "+node) ;
+            throw new LARQException("Can't store: "+node) ;
     }
 
     public static Node build(Document doc)
@@ -113,7 +113,7 @@ public class LARQ
         String bnode = doc.get(LARQ.fBNodeID) ;
         if ( bnode != null )
             return Node.createAnon(new AnonId(bnode)) ;
-        throw new ARQLuceneException("Can't build: "+doc) ;
+        throw new LARQException("Can't build: "+doc) ;
     }
 
     public static boolean isString(Literal literal)

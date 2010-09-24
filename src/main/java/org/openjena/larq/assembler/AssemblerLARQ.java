@@ -37,10 +37,9 @@ public class AssemblerLARQ extends AssemblerBase implements Assembler
 
             String index = GraphUtils.getAsStringValue(root, LARQAssemblerVocab.pIndex) ;
             Directory dir = FSDirectory.open(new File(index));
-            IndexReader indexReader = IndexReader.open(dir, true) ;
+            IndexReader indexReader = IndexReader.open(dir, false) ;
             IndexLARQ indexLARQ = new IndexLARQ(indexReader) ;
             return indexLARQ ;
-
         } catch (Exception ex)
         {
             throw new ARQException("Failed to assemble Lucene index", ex) ;

@@ -59,7 +59,7 @@ public class IndexBuilderBase implements IndexBuilder
             dir = FSDirectory.open(fileDir);
             makeIndex() ;
         } catch (Exception ex)
-        { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
+        { throw new LARQException("IndexBuilderLARQ", ex) ; }
         
     }
     
@@ -71,7 +71,7 @@ public class IndexBuilderBase implements IndexBuilder
             dir = FSDirectory.open(new File(fileDir));
             makeIndex() ;
         } catch (Exception ex)
-        { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
+        { throw new LARQException("IndexBuilderLARQ", ex) ; }
     }
 
     private void makeIndex()
@@ -79,7 +79,7 @@ public class IndexBuilderBase implements IndexBuilder
         try {
             indexWriter = new IndexWriter(dir, new StandardAnalyzer(Version.LUCENE_29), MaxFieldLength.UNLIMITED) ;
         } catch (Exception ex)
-        { throw new ARQLuceneException("IndexBuilderLARQ", ex) ; }
+        { throw new LARQException("IndexBuilderLARQ", ex) ; }
     }
 
     protected IndexWriter getIndexWriter() { return indexWriter ; }
@@ -90,7 +90,7 @@ public class IndexBuilderBase implements IndexBuilder
         try {
             flushWriter() ;
             return IndexReader.open(dir, true) ;
-        } catch (Exception e) { throw new ARQLuceneException("getIndexReader", e) ; }
+        } catch (Exception e) { throw new LARQException("getIndexReader", e) ; }
     }
     
     /** Close the writing index permanently.  Optimizes the index. */ 
@@ -108,14 +108,14 @@ public class IndexBuilderBase implements IndexBuilder
         try {
             if ( indexWriter != null ) indexWriter.close();
         }
-        catch (IOException ex) { throw new ARQLuceneException("closeIndex", ex) ; }
+        catch (IOException ex) { throw new LARQException("closeIndex", ex) ; }
         indexWriter = null ;
    }
     
     public void flushWriter()
     { 
         try { if ( indexWriter != null ) indexWriter.optimize(); }
-        catch (IOException ex) { throw new ARQLuceneException("flushWriter", ex) ; }
+        catch (IOException ex) { throw new LARQException("flushWriter", ex) ; }
     }
     
     /** Get a search index used by LARQ */
