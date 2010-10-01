@@ -6,10 +6,17 @@
 
 package org.openjena.larq;
 
+import java.io.IOException;
 import java.io.StringReader;
 
 import junit.framework.TestCase;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -19,8 +26,11 @@ import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -310,6 +320,49 @@ public class TestLARQ_Code extends TestCase
             assertFalse(qExec.getContext().isDefined(LARQ.indexKey)) ;
             assertFalse(ARQ.getContext().isDefined(LARQ.indexKey)) ;
         } finally { LARQ.removeDefaultIndex() ; }
+    }
+    
+    @Test public void test_remove_1() 
+    {
+        IndexBuilderNode b = new IndexBuilderNode() ;
+        Model model = ModelFactory.createDefaultModel() ;
+        Resource r = model.createResource("http://example/r") ;
+        b.index(r, "foo") ;
+        b.unindex(r, "foo");
+        b.closeWriter();
+        
+        IndexLARQ index = b.getIndex() ;
+        assertFalse(index.searchModelByIndex("foo").hasNext()) ;
+    }
+    
+    @Test public void test_remove_2() throws Exception 
+    {
+    	Directory directory = new RAMDirectory();
+    	IndexWriter indexWriter = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_29), MaxFieldLength.UNLIMITED);
+        IndexBuilderString indexBuilder = new IndexBuilderString(indexWriter);
+    	Model model = ModelFactory.createDefaultModel();
+        model.register(indexBuilder) ;
+        FileManager.get().readModel(model, datafile) ;
+        model.removeAll(ResourceFactory.createResource("http://example/doc3"), (Property)null, (RDFNode)null);
+        indexBuilder.closeWriter() ;
+        
+        IndexLARQ index = indexBuilder.getIndex() ;
+        assertFalse(index.searchModelByIndex("keyword").hasNext()) ;    	
+    }
+
+    @Test public void test_remove_3() throws IOException 
+    {
+        IndexBuilderNode b = new IndexBuilderNode() ;
+        Model model = ModelFactory.createDefaultModel() ;
+        Resource r = model.createResource("http://example/r") ;
+        StringReader sr = new StringReader("foo") ;
+        b.index(r, sr) ;
+        sr = new StringReader("foo") ;
+        b.unindex(r, sr);
+        b.closeWriter();
+        
+        IndexLARQ index = b.getIndex() ;
+        assertFalse(index.searchModelByIndex("foo").hasNext()) ;
     }
     
 //    

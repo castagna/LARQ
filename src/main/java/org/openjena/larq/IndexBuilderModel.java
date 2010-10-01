@@ -56,10 +56,6 @@ public abstract class IndexBuilderModel extends StatementListener
     public void removedStatement(Statement s)
     { unindexStatement(s) ; }
 
-    /** Remove index information */
-    public void unindexStatement(Statement s)
-    { throw new java.lang.UnsupportedOperationException("unindexStatement") ; }
-    
     /** ModelListener interface : statement added to the model */
     @Override
     public void addedStatement(Statement s)
@@ -75,6 +71,8 @@ public abstract class IndexBuilderModel extends StatementListener
     /** Update index based on one statement */
     public abstract void indexStatement(Statement s) ;
    
+    /** Remove index information */
+    public abstract void unindexStatement(Statement s) ;
     
     /** Flush the index, optimizing it, to allow a reader to be created */
     public void flushWriter() { index.flushWriter() ; }

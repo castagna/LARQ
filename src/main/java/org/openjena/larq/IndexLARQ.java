@@ -46,7 +46,7 @@ public class IndexLARQ
         
     public IndexLARQ(IndexReader r, Analyzer a)
     { 
-        this(r, new QueryParser(LARQ.fIndex, a)) ;
+        this(r, LuceneQueryParserFactory.create(a)) ;
     }
     
     public IndexLARQ(IndexReader r, QueryParser qp)

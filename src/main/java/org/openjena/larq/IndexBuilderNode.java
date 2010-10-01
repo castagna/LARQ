@@ -6,15 +6,16 @@
 
 package org.openjena.larq;
 
-import java.io.File ;
-import java.io.IOException ;
-import java.io.Reader ;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 
-import org.apache.lucene.document.Document ;
-import org.apache.lucene.index.IndexWriter ;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.search.Query;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.rdf.model.RDFNode ;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /** Helper class for index creation from external content.
  *  
@@ -85,6 +86,39 @@ public class IndexBuilderNode extends IndexBuilderBase
         } catch (IOException ex)
         { throw new LARQException("index", ex) ; }
     }
+    
+    public void unindex(RDFNode rdfNode, String indexStr)
+    {
+        try {
+            Query query = LARQ.unindex(rdfNode.asNode(), indexStr);
+            getIndexWriter().deleteDocuments(query);
+        } catch (Exception ex)
+        { throw new LARQException("unindex", ex) ; } 
+    }
+    
+    public void unindex(Node node, String indexStr)
+    {
+        try {
+            Query query = LARQ.unindex(node, indexStr);
+            getIndexWriter().deleteDocuments(query);
+        } catch (Exception ex)
+        { throw new LARQException("unindex", ex) ; } 
+    }
+
+    public void unindex(RDFNode rdfNode, Reader inputStream)
+    {
+    	unindex(rdfNode.asNode(), inputStream) ;
+    }
+    
+    public void unindex(Node node, Reader inputStream)
+    {
+        try {
+            Query query = LARQ.unindex(node, inputStream);
+            getIndexWriter().deleteDocuments(query);
+        } catch (Exception ex)
+        { throw new LARQException("unindex", ex) ; } 
+    }
+
 }
 
 /*

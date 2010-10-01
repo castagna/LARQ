@@ -6,16 +6,15 @@
 
 package org.openjena.larq;
 
-import java.io.File ;
-import java.util.HashSet ;
-import java.util.Set ;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.lucene.index.IndexWriter ;
+import org.apache.lucene.index.IndexWriter;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.rdf.model.Literal ;
-import com.hp.hpl.jena.rdf.model.Statement ;
-import com.hp.hpl.jena.sparql.ARQNotImplemented ;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 /** 
  * Base class for indexing literals (i.e. index is a literal and the 
@@ -25,7 +24,7 @@ import com.hp.hpl.jena.sparql.ARQNotImplemented ;
 
 public abstract class IndexBuilderLiteral extends IndexBuilderModel
 {
-    // Ensure literals ar eindex once only.
+    // Ensure literals are indexed once only.
     // Expensive to have use a Lucene reader (they see the state of the index when opened)
     // to check so need to manange duplicates in this class.
     private Set<Node> seen = new HashSet<Node>() ;
@@ -49,8 +48,17 @@ public abstract class IndexBuilderLiteral extends IndexBuilderModel
     protected abstract boolean indexThisStatement(Statement stmt) ;
 
     @Override
-    public void unindexStatement(Statement s)
-    { throw new ARQNotImplemented("unindexStatement") ; }
+    public void unindexStatement(Statement s) { 
+        if ( ! indexThisStatement(s) )
+            return ;
+
+        if ( s.getObject().isLiteral() )
+        {
+            Node node = s.getObject().asNode() ;
+            if ( indexThisLiteral(s.getLiteral()))
+            	index.unindex(node, node.getLiteralLexicalForm()) ;
+        }
+    }
     
     @Override
     public void indexStatement(Statement s)

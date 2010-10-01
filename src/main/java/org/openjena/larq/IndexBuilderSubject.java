@@ -6,14 +6,13 @@
 
 package org.openjena.larq;
 
-import java.io.File ;
+import java.io.File;
 
-import org.apache.lucene.index.IndexWriter ;
+import org.apache.lucene.index.IndexWriter;
 
-import com.hp.hpl.jena.graph.Node ;
-import com.hp.hpl.jena.rdf.model.Property ;
-import com.hp.hpl.jena.rdf.model.Statement ;
-import com.hp.hpl.jena.sparql.ARQNotImplemented ;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 /** 
  * Class for indexing by subject (i.e. index is a literal and the 
@@ -65,8 +64,23 @@ public class IndexBuilderSubject extends IndexBuilderModel
     }
     
     @Override
-    public void unindexStatement(Statement s)
-    { throw new ARQNotImplemented("unindexStatement") ; }
+    public void unindexStatement(Statement s) 
+    { 
+        if ( ! indexThisStatement(s) )
+            return ;
+
+        try {
+            Node subject = s.getSubject().asNode() ;
+
+            if ( ! s.getObject().isLiteral() || ! LARQ.isString(s.getLiteral()) )
+                return ;
+
+            Node object  = s.getObject().asNode() ;
+            
+            index.unindex(subject, object.getLiteralLexicalForm()) ;
+        } catch (Exception e)
+        { throw new LARQException("unindexStatement", e) ; }
+    }
     
     @Override
     public void indexStatement(Statement s)
