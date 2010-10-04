@@ -11,12 +11,6 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 import org.junit.Test;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -325,8 +319,7 @@ public class TestLARQ_Code extends TestCase
     @Test public void test_remove_1() 
     {
         IndexBuilderNode b = new IndexBuilderNode() ;
-        Model model = ModelFactory.createDefaultModel() ;
-        Resource r = model.createResource("http://example/r") ;
+        Resource r = ResourceFactory.createResource("http://example/r") ;
         b.index(r, "foo") ;
         b.unindex(r, "foo");
         b.closeWriter();
@@ -337,9 +330,7 @@ public class TestLARQ_Code extends TestCase
     
     @Test public void test_remove_2() throws Exception 
     {
-    	Directory directory = new RAMDirectory();
-    	IndexWriter indexWriter = new IndexWriter(directory, new StandardAnalyzer(Version.LUCENE_29), MaxFieldLength.UNLIMITED);
-        IndexBuilderString indexBuilder = new IndexBuilderString(indexWriter);
+        IndexBuilderString indexBuilder = new IndexBuilderString();
     	Model model = ModelFactory.createDefaultModel();
         model.register(indexBuilder) ;
         FileManager.get().readModel(model, datafile) ;
@@ -353,8 +344,7 @@ public class TestLARQ_Code extends TestCase
     @Test public void test_remove_3() throws IOException 
     {
         IndexBuilderNode b = new IndexBuilderNode() ;
-        Model model = ModelFactory.createDefaultModel() ;
-        Resource r = model.createResource("http://example/r") ;
+        Resource r = ResourceFactory.createResource("http://example/r") ;
         StringReader sr = new StringReader("foo") ;
         b.index(r, sr) ;
         sr = new StringReader("foo") ;
@@ -364,6 +354,88 @@ public class TestLARQ_Code extends TestCase
         IndexLARQ index = b.getIndex() ;
         assertFalse(index.searchModelByIndex("foo").hasNext()) ;
     }
+
+    @Test public void test_duplicates_1() 
+    {
+        IndexBuilderNode b = new IndexBuilderNode() ;
+        Resource r = ResourceFactory.createResource("http://example/r") ;
+        b.index(r, "foo") ;
+        b.index(r, "foo") ;
+        b.closeWriter();
+
+        IndexLARQ index = b.getIndex() ;
+        NodeIterator nIter = index.searchModelByIndex("foo") ;
+        assertEquals(1, TestLARQUtils.count(nIter)) ;
+    }
+    
+    @Test public void test_duplicates_2() throws Exception 
+    {
+        IndexBuilderString indexBuilder = new IndexBuilderString();
+    	Model model = ModelFactory.createDefaultModel();
+        model.register(indexBuilder) ;
+        model.add(model.createResource("http://example/r"), RDFS.label, "foo");
+        model.add(model.createResource("http://example/r"), RDFS.label, "foo");
+        indexBuilder.closeWriter() ;
+        
+        IndexLARQ index = indexBuilder.getIndex() ;
+        NodeIterator nIter = index.searchModelByIndex("foo") ;
+        assertEquals(1, TestLARQUtils.count(nIter)) ;
+    }
+
+    @Test public void test_duplicates_3() 
+    {
+        IndexBuilderNode b = new IndexBuilderNode() ;
+        Resource r1 = ResourceFactory.createResource() ;
+        Resource r2 = ResourceFactory.createResource() ;
+        b.index(r1, "foo") ;
+        b.index(r1, "foo") ;
+        b.index(r1, "bar") ;
+        b.index(r2, "foo") ;
+        b.index(r2, "foo") ;
+        b.index(r2, "bar") ;
+        b.closeWriter();
+
+        IndexLARQ index = b.getIndex() ;
+        NodeIterator nIter = index.searchModelByIndex("foo") ;
+        assertEquals(2, TestLARQUtils.count(nIter)) ;
+        nIter = index.searchModelByIndex("bar") ;
+        assertEquals(2, TestLARQUtils.count(nIter)) ;
+    }
+    
+    @Test public void test_duplicates_4() throws Exception 
+    {
+        IndexBuilderString indexBuilder = new IndexBuilderString();
+    	Model model = ModelFactory.createDefaultModel();
+        model.register(indexBuilder) ;
+        model.add(model.createResource(), RDFS.label, "foo");
+        model.add(model.createResource(), RDFS.label, "foo");
+        indexBuilder.closeWriter() ;
+        
+        IndexLARQ index = indexBuilder.getIndex() ;
+        NodeIterator nIter = index.searchModelByIndex("foo") ;
+        assertEquals(1, TestLARQUtils.count(nIter)) ;
+    }
+    
+    @Test public void test_duplicates_5() throws Exception 
+    {
+        IndexBuilderNode indexBuilder = new IndexBuilderNode();
+        
+        Resource blank = ResourceFactory.createResource() ;
+        indexBuilder.index(blank, "foo");
+        indexBuilder.index(blank, "foo");
+        indexBuilder.index(blank, "bar");
+        indexBuilder.closeWriter() ;
+        
+        IndexLARQ index = indexBuilder.getIndex() ;
+        NodeIterator nIter = index.searchModelByIndex("foo") ;
+        assertEquals(1, TestLARQUtils.count(nIter)) ;
+        assertEquals(blank, index.searchModelByIndex("foo").nextNode());
+        nIter = index.searchModelByIndex("bar") ;
+        assertEquals(1, TestLARQUtils.count(nIter)) ;
+        assertEquals(blank, index.searchModelByIndex("bar").nextNode());
+    }
+
+
     
 //    
 //    @Test public void test_search_literal_1()

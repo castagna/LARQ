@@ -43,12 +43,15 @@ public class IndexBuilderNode extends IndexBuilderBase
     /** Create an on-disk index */
     public IndexBuilderNode(String fileDir) { super(fileDir) ; }
 
+    private static final boolean AVOID_DUPLICATES = true;
+    
     public void index(RDFNode rdfNode, String indexStr)
     {
         try {
+        	if ( AVOID_DUPLICATES ) unindex(rdfNode, indexStr);
             Document doc = new Document() ;
             LARQ.store(doc, rdfNode.asNode()) ;
-            LARQ.index(doc, indexStr) ;
+            LARQ.index(doc, rdfNode.asNode(), indexStr) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
         { throw new LARQException("index", ex) ; }
@@ -57,9 +60,10 @@ public class IndexBuilderNode extends IndexBuilderBase
     public void index(RDFNode rdfNode, Reader indexStream)
     {
         try {
+        	if ( AVOID_DUPLICATES ) unindex(rdfNode, indexStream);
             Document doc = new Document() ;
             LARQ.store(doc, rdfNode.asNode()) ;
-            LARQ.index(doc, indexStream) ;
+            LARQ.index(doc, rdfNode.asNode(), indexStream) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
         { throw new LARQException("index", ex) ; }
@@ -68,9 +72,10 @@ public class IndexBuilderNode extends IndexBuilderBase
     public void index(Node node, String indexStr)
     {
         try {
+        	if ( AVOID_DUPLICATES ) unindex(node, indexStr);
             Document doc = new Document() ;
             LARQ.store(doc, node) ;
-            LARQ.index(doc, indexStr) ;
+            LARQ.index(doc, node, indexStr) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
         { throw new LARQException("index", ex) ; }
@@ -79,9 +84,10 @@ public class IndexBuilderNode extends IndexBuilderBase
     public void index(Node node, Reader indexStream)
     {
         try {
+        	if ( AVOID_DUPLICATES ) unindex(node, indexStream);
             Document doc = new Document() ;
             LARQ.store(doc, node) ;
-            LARQ.index(doc, indexStream) ;
+            LARQ.index(doc, node, indexStream) ;
             getIndexWriter().addDocument(doc) ;
         } catch (IOException ex)
         { throw new LARQException("index", ex) ; }

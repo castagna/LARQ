@@ -16,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -82,63 +81,36 @@ public class LARQ
     public static void removeDefaultIndex(Context context)
     { context.unset(LARQ.indexKey) ; }
 
-    public static void index(Document doc, Node indexNode)
-    {
-        if ( ! indexNode.isLiteral() )
-            throw new LARQException("Not a literal: "+indexNode) ;
-        index(doc, indexNode.getLiteralLexicalForm()) ;
-    }        
-     
-    public static void index(Document doc, String indexContent)
+    public static void index(Document doc, Node node, String indexContent)
     {
         Field indexField = new Field(LARQ.fIndex, indexContent, Field.Store.NO, Field.Index.ANALYZED) ;
         doc.add(indexField) ;
 
-        Field indexHashField = new Field(LARQ.fIndexHash, hash(indexContent), Field.Store.NO, Field.Index.NOT_ANALYZED) ;
+        Field indexHashField = new Field(LARQ.fIndexHash, hash(node, indexContent), Field.Store.NO, Field.Index.NOT_ANALYZED) ;
         doc.add(indexHashField) ;
     }        
      
-    public static void index(Document doc, Reader indexContent)
+    public static void index(Document doc, Node node, Reader indexContent)
     {
        	Field indexField = new Field(LARQ.fIndex, indexContent) ;
         doc.add(indexField) ;
 
-        Field indexHashField = new Field(LARQ.fIndexHash, hash(indexContent), Field.Store.NO, Field.Index.NOT_ANALYZED) ;
+        Field indexHashField = new Field(LARQ.fIndexHash, hash(node, indexContent), Field.Store.NO, Field.Index.NOT_ANALYZED) ;
        	doc.add(indexHashField) ;
     }
     
-	public static Query unindex(Node node, String indexStr) throws ParseException 
+	public static Query unindex(Node node, String indexStr)  
 	{
 		BooleanQuery query = new BooleanQuery();
-		query.add(new TermQuery(new Term(LARQ.fIndexHash, hash(indexStr))) , Occur.MUST);
-
-        if ( node.isLiteral() ) {
-        	queryLiteral (query, (Node_Literal)node);  	
-        } else if ( node.isURI() ) {
-        	queryURI (query, (Node_URI)node) ;
-        } else if ( node.isBlank() ) {
-        	queryBNode (query, (Node_Blank)node) ;
-        } else {
-            throw new LARQException("Can't unindex: "+node) ;
-        }
+		query.add(new TermQuery(new Term(LARQ.fIndexHash, hash(node, indexStr))) , Occur.MUST);
         
 		return query;
 	}
 
-	public static Query unindex(Node node, Reader indexContent) throws ParseException 
+	public static Query unindex(Node node, Reader indexContent) 
 	{
 		BooleanQuery query = new BooleanQuery();
-		query.add(new TermQuery(new Term(LARQ.fIndexHash, hash(indexContent))) , Occur.MUST);
-
-        if ( node.isLiteral() ) {
-        	queryLiteral (query, (Node_Literal)node);  	
-        } else if ( node.isURI() ) {
-        	queryURI (query, (Node_URI)node) ;
-        } else if ( node.isBlank() ) {
-        	queryBNode (query, (Node_Blank)node) ;
-        } else {
-            throw new LARQException("Can't unindex: "+node) ;
-        }
+		query.add(new TermQuery(new Term(LARQ.fIndexHash, hash(node, indexContent))) , Occur.MUST);
         
 		return query;
 	}
@@ -185,7 +157,7 @@ public class LARQ
         String x = node.getURI() ;
         Field f = new Field(LARQ.fIndex, x, Field.Store.NO, Field.Index.ANALYZED) ;
         doc.add(f) ;
-        f = new Field(LARQ.fURI, x, Field.Store.YES, Field.Index.NOT_ANALYZED) ;
+        f = new Field(LARQ.fURI, x, Field.Store.YES, Field.Index.NO) ;
         doc.add(f) ;
     }
 
@@ -194,7 +166,7 @@ public class LARQ
         String x = node.getBlankNodeLabel() ;
         Field f = new Field(LARQ.fIndex, x, Field.Store.NO, Field.Index.ANALYZED) ;
         doc.add(f) ;
-        f = new Field(LARQ.fBNodeID, x, Field.Store.YES, Field.Index.NOT_ANALYZED) ;
+        f = new Field(LARQ.fBNodeID, x, Field.Store.YES, Field.Index.NO) ;
         doc.add(f) ;
     }
     
@@ -204,48 +176,19 @@ public class LARQ
         String datatype = node.getLiteralDatatypeURI() ;
         String lang = node.getLiteralLanguage() ;
 
-        Field f = new Field(LARQ.fLex, lex, Field.Store.YES, Field.Index.NOT_ANALYZED) ;
+        Field f = new Field(LARQ.fLex, lex, Field.Store.YES, Field.Index.NO) ;
         doc.add(f) ;
         
         if ( lang != null )
         {
-            f = new Field(LARQ.fLang, lang, Field.Store.YES, Field.Index.NOT_ANALYZED) ;
+            f = new Field(LARQ.fLang, lang, Field.Store.YES, Field.Index.NO) ;
             doc.add(f) ;
         }
 
         if ( datatype != null )
         {       
-            f = new Field(LARQ.fDataType, datatype, Field.Store.YES, Field.Index.NOT_ANALYZED) ;
+            f = new Field(LARQ.fDataType, datatype, Field.Store.YES, Field.Index.NO) ;
             doc.add(f) ;
-        }
-    }
-    
-    private static void queryURI(BooleanQuery query, Node_URI node)
-    { 
-        query.add(new TermQuery(new Term(LARQ.fURI, node.getURI())) , Occur.MUST);
-    }
-
-    private static void queryBNode(BooleanQuery query, Node_Blank node)
-    { 
-        query.add(new TermQuery(new Term(LARQ.fBNodeID, node.getBlankNodeLabel())) , Occur.MUST);
-    }
-    
-    private static void queryLiteral(BooleanQuery query, Node_Literal node)
-    {
-        String lex = node.getLiteralLexicalForm() ;
-        String datatype = node.getLiteralDatatypeURI() ;
-        String lang = node.getLiteralLanguage() ;
-
-        query.add(new TermQuery(new Term(LARQ.fLex, lex)) , Occur.MUST);
-        
-        if ( lang != null )
-        {
-            query.add(new TermQuery(new Term(LARQ.fLang, lang)) , Occur.MUST);
-        }
-
-        if ( datatype != null )
-        {       
-            query.add(new TermQuery(new Term(LARQ.fDataType, datatype)) , Occur.MUST);
         }
     }
     
@@ -259,7 +202,25 @@ public class LARQ
         return NodeFactory.createLiteralNode(lex, lang, datatype) ;
     }
 
-    private static String hash (Node node) 
+    private static String hash (String str) 
+    {
+        MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(str.getBytes("UTF8"));
+            byte[] hash = digest.digest();
+            BigInteger bigInt = new BigInteger(hash);
+            return bigInt.toString();
+        } catch (NoSuchAlgorithmException e) {
+        	new LARQException("hash", e);
+        } catch (UnsupportedEncodingException e) {
+        	new LARQException("hash", e);
+        }
+
+        return null;
+    }
+    
+    private static String hash (Node node, String str) 
     {
         String lexForm = null ; 
         String datatypeStr = "" ;
@@ -277,11 +238,27 @@ public class LARQ
         	throw new LARQException("Unable to hash node:"+node) ;
         }
 
-        return hash (lexForm + "|" + langStr + "|" + datatypeStr);
+        return hash (lexForm + "|" + langStr + "|" + datatypeStr + "|" + str);
     }
     
-    private static String hash (Reader reader)
+    private static String hash (Node node, Reader reader)
     {
+        String lexForm = null ; 
+        String datatypeStr = "" ;
+        String langStr = "" ;
+        
+        if ( node.isURI() ) {
+        	lexForm = node.getURI() ;
+        } else if ( node.isLiteral() ) {
+        	lexForm = node.getLiteralLexicalForm() ;
+            datatypeStr = node.getLiteralDatatypeURI() ;
+            langStr = node.getLiteralLanguage() ;
+        } else if ( node.isBlank() ) {
+        	lexForm = node.getBlankNodeLabel() ;
+        } else {
+        	throw new LARQException("Unable to hash node:"+node) ;
+        }
+    	
     	StringBuffer sb = new StringBuffer();
 		try {
 	        int charsRead;
@@ -304,25 +281,7 @@ public class LARQ
 			new LARQException("hash", e);
 		}
 		
-		return hash(sb.toString());
-    }
-    
-    private static String hash (String str) 
-    {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(str.getBytes("UTF8"));
-            byte[] hash = digest.digest();
-            BigInteger bigInt = new BigInteger(hash);
-            return bigInt.toString();
-        } catch (NoSuchAlgorithmException e) {
-        	new LARQException("hash", e);
-        } catch (UnsupportedEncodingException e) {
-        	new LARQException("hash", e);
-        }
-
-        return null;
+		return hash (lexForm + "|" + langStr + "|" + datatypeStr + "|" + sb.toString());
     }
     
 }

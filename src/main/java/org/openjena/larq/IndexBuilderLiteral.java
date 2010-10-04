@@ -7,8 +7,6 @@
 package org.openjena.larq;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.lucene.index.IndexWriter;
 
@@ -24,11 +22,6 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public abstract class IndexBuilderLiteral extends IndexBuilderModel
 {
-    // Ensure literals are indexed once only.
-    // Expensive to have use a Lucene reader (they see the state of the index when opened)
-    // to check so need to manange duplicates in this class.
-    private Set<Node> seen = new HashSet<Node>() ;
-    
     public IndexBuilderLiteral()
     { super() ; }
 
@@ -55,8 +48,9 @@ public abstract class IndexBuilderLiteral extends IndexBuilderModel
         if ( s.getObject().isLiteral() )
         {
             Node node = s.getObject().asNode() ;
-            if ( indexThisLiteral(s.getLiteral()))
+            if ( indexThisLiteral(s.getLiteral())) {
             	index.unindex(node, node.getLiteralLexicalForm()) ;
+            }
         }
     }
     
@@ -70,12 +64,8 @@ public abstract class IndexBuilderLiteral extends IndexBuilderModel
             if ( s.getObject().isLiteral() )
             {
                 Node node = s.getObject().asNode() ;
-                if ( ! seen.contains(node) )
-                {
-                    if ( indexThisLiteral(s.getLiteral()))
-                        index.index(node, node.getLiteralLexicalForm()) ;
-                    seen.add(node) ;
-                }
+                if ( indexThisLiteral(s.getLiteral()))
+                	index.index(node, node.getLiteralLexicalForm()) ;
             }
         } catch (Exception e)
         { throw new LARQException("indexStatement", e) ; }
@@ -86,7 +76,6 @@ public abstract class IndexBuilderLiteral extends IndexBuilderModel
     public void closeWriter()
     { 
         super.closeWriter() ;
-        seen = null ;
     }
 }
 
