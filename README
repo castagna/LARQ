@@ -1,21 +1,7 @@
-LARQ - Free Text Indexing for SPARQL
-------------------------------------
+This has been moved here:
+https://jena.svn.sourceforge.net/svnroot/jena/LARQ/
 
-LARQ is a combination of ARQ and Lucene. It gives ARQ the ability to perform 
-free text searches. Lucene indexes are additional information for accessing 
-the RDF graph, not storage for the graph itself.
+It will move from there to Apache Incubator soon:
+http://svn.apache.org/repos/asf/incubator/jena/trunk/
 
-This is an *experimental* (and unsupported) separate module from ARQ.
-
-
-See also:
-
- - http://openjena.org/ARQ/lucene-arq.html
-
- 
-TODO
-====
-
- - Upgrade Lucene to 3.x (i.e. all deprecated methods have been removed)
- - Add a new index builder and property function for Solr (via SolrJ)
- 
+Keep Calm and Carry On.
